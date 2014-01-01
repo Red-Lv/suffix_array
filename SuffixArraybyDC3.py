@@ -1,5 +1,5 @@
 #! /bin/env python
-#! -*coding:UTF-8-*-
+#! -*coding:GBK-*-
 
 __author__ = 'lvleibing01'
 
@@ -12,15 +12,14 @@ class SuffixArraybyDC3(object):
 
         pass
 
-    def init(self, s, K):
+    def init(self, s):
 
         self.s = s
         if isinstance(self.s, str):
             self.s = list(self.s)
 
         self.s = [ord(item) for item in s]
-
-        self.K = K
+        self.K = max(self.s)
 
         self.SA = []
         self.RA = []
@@ -221,8 +220,8 @@ class SuffixArraybyDC3(object):
         """
 
         for i in xrange(len(self.SA)):
-            suffix = ''.join(map(chr, self.s[self.SA[i]: ]))
-            print '\t'.join(map(str, [i, self.SA[i], suffix]))
+            suffix = u''.join(map(unichr, self.s[self.SA[i]: ]))
+            print u'\t'.join(map(unicode, [i, self.SA[i], suffix]))
 
     def dump_h_array(self):
         """
@@ -242,7 +241,7 @@ if __name__ == '__main__':
 
     suffix_array_dc3 = SuffixArraybyDC3()
     #suffix_array_dc3.init('xxxxyxxxzzxxxx', 128)
-    suffix_array_dc3.init('abcefgafgbcdabcde', 128)
+    suffix_array_dc3.init('abcefgafgbcdabcde')
 
     suffix_array_dc3.gen_suffix_array()
 
