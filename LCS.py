@@ -117,7 +117,11 @@ if __name__ == '__main__':
             if not line:
                 continue
 
-            str_list.append(unicode(line, 'GBK'))
+            str_list.append(unicode(line, 'GBK', 'ignore'))
+
+    if not str_list:
+        print 'str_list is empty'
+        sys.exit(2)
 
     lcs.init(*str_list)
     lcs.gen_lcs()
