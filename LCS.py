@@ -52,7 +52,6 @@ class LCS(object):
         """
 
         str_cover_dict = {}
-        cs = u''
         for i in range(len(self.suffix_array.height_array)):
 
             if self.suffix_array.height_array[i] < k:
@@ -70,10 +69,10 @@ class LCS(object):
 
             if len(str_cover_dict) >= len(self.str_list):
                 cs = self.str_comp[self.suffix_array.SA[i]: ][: k]
-                if cs.find(self.sep) != -1:
-                    return self.str_comp[self.suffix_array.SA[i]: ][: k]
+                if cs.find(self.sep) == -1:
+                    return cs
 
-        return cs
+        return u''
 
     def gen_lcs(self):
         """
