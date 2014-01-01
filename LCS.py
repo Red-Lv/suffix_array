@@ -94,7 +94,7 @@ class LCS(object):
             else:
                 right = mid - 1
 
-        print lcs
+        print lcs.encode('GBK', 'ignore')
 
         return True
 
