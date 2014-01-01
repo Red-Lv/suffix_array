@@ -67,6 +67,7 @@ class SuffixArraybyDC3(object):
 
         #the count of element mod 3 == 0, 1, 2
         n0, n1, n2 = (n + 2) / 3, (n + 1) / 3, n / 3
+        n02 = n0 + n2
 
         #index in [0, n) where position % 3 == 1
         #why n0 - n1:
@@ -122,7 +123,7 @@ class SuffixArraybyDC3(object):
         SA = []
         #excellent trick
         i, j = 0,  n0 - n1
-        while i < n0 and j < n0 + n2:
+        while i < n0 and j < n02:
 
             index_0 = SA0[i]
             index_12 = SA12[j]
@@ -152,8 +153,8 @@ class SuffixArraybyDC3(object):
             if i < n0:
                 SA.extend(SA0[i: n0])
 
-            if j < n0 + n2:
-                SA.extend(SA12[j: n0])
+            if j < n02:
+                SA.extend(SA12[j: n02])
 
         return SA
 
@@ -162,8 +163,6 @@ class SuffixArraybyDC3(object):
         """
 
         self.SA = self._gen_suffix_array(self.s[:], self.K)
-
-    def 
 
     def dump_suffix_array(self):
         """
