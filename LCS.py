@@ -70,7 +70,7 @@ class LCS(object):
             if len(str_cover_dict) >= len(self.str_list):
                 return self.str_comp[self.suffix_array.SA[i]: ][: k]
 
-        return None
+        return u''
 
     def gen_lcs(self):
         """
@@ -80,19 +80,19 @@ class LCS(object):
         #self.suffix_array.dump_suffix_array()
         #self.suffix_array.dump_height_array()
 
-        min_len = min(map(len, self.str_list))
-        left, right = 0, min_len
+        max_len = max(map(len, self.str_list))
+        left, right = 1, max_len
 
-        lcs = None
+        lcs = u''
         while left <= right:
 
             mid = (left + right) / 2
             cs = self.exist_cs(mid)
             if cs:
                 lcs = cs
-                l = mid + 1
+                left = mid + 1
             else:
-                r = mid - 1
+                right = mid - 1
 
         print lcs
 
