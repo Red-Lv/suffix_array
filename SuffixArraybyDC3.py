@@ -221,7 +221,7 @@ class SuffixArraybyDC3(object):
 
         for i in xrange(len(self.SA)):
             suffix = u''.join(map(unichr, self.s[self.SA[i]: ]))
-            print u'\t'.join(map(unicode, [i, self.SA[i], suffix]))
+            print u'\t'.join(map(unicode, [i, self.SA[i], suffix])).encode('GBK')
 
     def dump_h_array(self):
         """
