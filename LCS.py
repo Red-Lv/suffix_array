@@ -3,6 +3,8 @@
 
 __author__ = 'lvleibing01'
 
+import sys
+
 import SuffixArraybyDC3
 
 
@@ -98,9 +100,24 @@ class LCS(object):
 
 if __name__ == '__main__':
 
+    if len(sys.argv) != 2:
+        print 'Usage: __file__ file'.format(__file__)
+        sys.exit(1)
+
+    file = sys.argv[1]
     lcs = LCS()
 
     str_list = [unicode('我们的内容内容内容简介：', 'GBK'), unicode('武动乾坤内容简介：', 'GBK')]
-    lcs.init(*str_list)
+    with open(file) as fp:
 
+        str_list = []
+        for line in fp:
+
+            line = line.strip()
+            if not line:
+                continue
+
+            str_list.append(unicode(line, 'GBK'))
+
+    lcs.init(*str_list)
     lcs.gen_lcs()
