@@ -48,7 +48,7 @@ class SuffixArraybyDC3(object):
         for i in xrange(0, K + 1):
             count[i], _sum = _sum, count[i] + _sum
 
-        index_arr_sorted = [None] * index_arr_len
+        index_arr_sorted = [0] * index_arr_len
         for i in range(index_arr_len):
 
             index = index_arr[i]
