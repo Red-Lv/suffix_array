@@ -23,7 +23,9 @@ class SuffixArraybyDC3(object):
         self.K = K
 
         self.SA = []
-        self.LCP = []
+        self.RA = []
+        self.h_array = []
+        self.height_array = []
 
         return True
 
@@ -84,7 +86,7 @@ class SuffixArraybyDC3(object):
         SA12 = self.radix_sort(s12, s[0:], K)
 
         c0 = c1 = c2 = None
-        count = -1
+        count = 0
         for i in xrange(len(SA12)):
 
             index = SA12[i]
@@ -99,19 +101,19 @@ class SuffixArraybyDC3(object):
                 #   Because n0 is more significant than n1, for sometimes we need include n in the s12
                 s12[index / 3 + n0] = count
 
-        if count != len(s12) - 1:
+        if count != len(s12):
             #recursive
-            SA12 = self._gen_suffix_array(s12, K)
+            SA12 = self._gen_suffix_array(s12[:], count)
             #gen the s12 from SA12
             for i, index in enumerate(SA12):
-                s12[index] = i
+                s12[index] = i + 1
         else:
             #gen the SA from s12
             for i, index in enumerate(s12):
-                SA12[index] = i
+                SA12[index - 1] = i
 
         #excellent idea. enjoy this
-        s0 = [index * 3 for index in SA12 if index < n1]
+        s0 = [index * 3 for index in SA12 if index < n0]
         SA0 = self.radix_sort(s0, s, K)
 
         SA12 = map(lambda index: index * 3 + 1 if index < n0 else (index - n0) * 3 + 2, SA12)
@@ -125,9 +127,6 @@ class SuffixArraybyDC3(object):
         i, j = 0,  n0 - n1
         while i < n0 and j < n02:
 
-            index_0 = SA0[i]
-            index_12 = SA12[j]
-
             def leq(t1, t2):
 
                 for a, b in itertools.izip(t1, t2):
@@ -138,8 +137,11 @@ class SuffixArraybyDC3(object):
 
                 return True
 
-            if (leq((s[index_0], s12[(index_0 + 1) / 3]),
-                    (s[index_12], s12[n0 + (index_12 + 1) / 3])) if index_12 % 3 == 1
+            index_0 = SA0[i]
+            index_12 = SA12[j]
+
+            if (leq((s[index_0], s12[index_0 / 3]),
+                    (s[index_12], s12[n0 + index_12 / 3])) if index_12 % 3 == 1
                     else leq((s[index_0], s[index_0 + 1], s12[index_0 / 3 + n0]),
                              (s[index_12], s[index_12 + 1], s12[(index_12 + 2) / 3]))):
 
@@ -164,19 +166,90 @@ class SuffixArraybyDC3(object):
 
         self.SA = self._gen_suffix_array(self.s[:], self.K)
 
+    def gen_RA(self):
+        """
+        """
+
+        if not self.SA:
+            self.gen_suffix_array()
+
+        self.RA = [0] * len(self.SA)
+        for i, index in enumerate(self.SA):
+            self.RA[index] = i
+
+    def gen_h_array(self):
+        """
+        """
+
+        if not self.RA:
+            self.gen_RA()
+
+        for i in xrange(len(self.s)):
+
+            rank = self.RA[i]
+            if not rank:
+                self.h_array.append(0)
+                continue
+
+            start = self.h_array[i - 1] - 1 if i and self.h_array[i - 1] else 0
+            _start_pre = self.SA[rank - 1] + start
+            _start = i + start
+            while _start_pre < len(self.s) and _start < len(self.s):
+                if self.s[_start_pre] != self.s[_start]:
+                    break
+
+                start += 1
+                _start_pre += 1
+                _start += 1
+
+            self.h_array.append(start)
+
+    def gen_height_array(self):
+        """
+        """
+
+        if not self.h_array:
+            self.gen_h_array()
+
+        self.height_array = [0] * len(self.h_array)
+        for i, index in enumerate(self.SA):
+
+            self.height_array[i] = self.h_array[index]
+
     def dump_suffix_array(self):
         """
         """
 
         for i in xrange(len(self.SA)):
-            suffix = ''.join(map(chr,self.s[self.SA[i]: ]))
+            suffix = ''.join(map(chr, self.s[self.SA[i]: ]))
             print '\t'.join(map(str, [i, self.SA[i], suffix]))
+
+    def dump_h_array(self):
+        """
+        """
+
+        for i in xrange(len(self.h_array)):
+            print '\t'.join(map(str, [i, self.h_array[i]]))
+
+    def dump_height_array(self):
+        """
+        """
+
+        for i in xrange(len(self.height_array)):
+            print '\t'.join(map(str, [i, self.height_array[i]]))
 
 if __name__ == '__main__':
 
     suffix_array_dc3 = SuffixArraybyDC3()
-    suffix_array_dc3.init('bacacbefghibcefghi', 128)
+    #suffix_array_dc3.init('xxxxyxxxzzxxxx', 128)
+    suffix_array_dc3.init('abcefgafgbcdabcde', 128)
 
     suffix_array_dc3.gen_suffix_array()
 
     suffix_array_dc3.dump_suffix_array()
+
+    suffix_array_dc3.gen_height_array()
+
+    #suffix_array_dc3.dump_h_array()
+
+    suffix_array_dc3.dump_height_array()
