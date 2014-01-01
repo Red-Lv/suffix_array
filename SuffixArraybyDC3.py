@@ -113,18 +113,11 @@ class SuffixArraybyDC3(object):
         s0 = [index * 3 for index in SA12 if index < n1]
         SA0 = self.radix_sort(s0, s, K)
 
-        def get_index_of_s_for_s12(index, n0):
-
-            if index < n1:
-                return index * 3 + 1
-            else:
-                return (index - n0) * 3 + 2
-
         SA12 = map(lambda index: index * 3 + 1 if index < n0 else (index - n0) * 3 + 2, SA12)
         #why?
         #   pay attention to the step three: merging SA0 with SA12
         #   the None acts as a sentinel
-        s12.append(None)
+        s12.append(0)
 
         SA = []
         #excellent trick
