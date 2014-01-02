@@ -52,6 +52,8 @@ class LCS(object):
         """
 
         str_cover_dict = {}
+        cs_dict = {}
+        cs_list = []
         for i in range(len(self.suffix_array.height_array)):
 
             if self.suffix_array.height_array[i] < k:
@@ -67,12 +69,13 @@ class LCS(object):
             str_index = binary_search(self.start_index_list, 0, len(self.start_index_list) - 1, offset)
             str_cover_dict[str_index] = 1
 
-            if len(str_cover_dict) >= len(self.str_list):
+            if len(str_cover_dict) >= len(self.str_list) * 0.2:
                 cs = self.str_comp[self.suffix_array.SA[i]: ][: k]
                 if cs.find(self.sep) == -1:
-                    return cs
+                    #print cs
+                    cs_dict[cs] = 1
 
-        return u''
+        return cs_dict.keys()
 
     def gen_lcs(self):
         """
@@ -88,15 +91,34 @@ class LCS(object):
         lcs = u''
         while left <= right:
 
+            #print left, right
             mid = (left + right) / 2
             cs = self.exist_cs(mid)
+            #print mid, cs
             if cs:
                 lcs = cs
                 left = mid + 1
             else:
                 right = mid - 1
+    
+        cs_tot_list = []
+        for i in range(right, 1, -1):
+            cs_list = self.exist_cs(i)
+            cs = []
+            for item in cs_list:
+                valid = True
+                for cs_tot in cs_tot_list:
+                    if cs_tot.find(item) != -1:
+                        valid = False
+                        break
+                
+                if valid: 
+                    cs.append(item)
 
-        print lcs.encode('GBK', 'ignore')
+            cs_tot_list.extend(cs)
+            
+            print i
+            print u'\u001a'.join(cs).encode('GBK', 'ignore')
 
         return True
 
